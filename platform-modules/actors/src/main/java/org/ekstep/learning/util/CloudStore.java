@@ -24,14 +24,18 @@ private static BaseStorageService storageService = null;
 private static String cloudStoreType = Platform.config.getString("cloud_storage_type");
 	
 	static {
-
+        System.out.println("cloudStoreType"+cloudStoreType);
 		if(StringUtils.equalsIgnoreCase(cloudStoreType, "azure")) {
 			String storageKey = Platform.config.getString("azure_storage_key");
 			String storageSecret = Platform.config.getString("azure_storage_secret");
+			System.out.println("AZURE storageKey"+storageKey);
+			System.out.println("AZURE storageSecret"+storageSecret);
 			storageService = StorageServiceFactory.getStorageService(new StorageConfig(cloudStoreType, storageKey, storageSecret));
 		}else if(StringUtils.equalsIgnoreCase(cloudStoreType, "aws")) {
 			String storageKey = Platform.config.getString("aws_storage_key");
 			String storageSecret = Platform.config.getString("aws_storage_secret");
+			System.out.println("AWS storageKey"+storageKey);
+			System.out.println("AWS storageSecret"+storageSecret);
 			storageService = StorageServiceFactory.getStorageService(new StorageConfig(cloudStoreType, storageKey, storageSecret));
 		}else {
 			throw new ServerException("ERR_INVALID_CLOUD_STORAGE", "Error while initialising cloud storage");
