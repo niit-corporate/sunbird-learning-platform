@@ -58,9 +58,9 @@ public class CloudStoreManager {
         String mimeType = (String) metadata.get("mimeType");
         try {
             system.out.println("---------------------start--------------------------");
-                    system.out.println(destDownloadUrl);
+                    System.out.println(destDownloadUrl);
 
-                    system.out.println("------------------------end-----------------------");
+                    System.out.println("------------------------end-----------------------");
 
             String downloadUrl = (String) metadata.get("downloadUrl");
             if(StringUtils.isNotBlank(downloadUrl)){
@@ -68,10 +68,10 @@ public class CloudStoreManager {
                 if (!urlAvailable(destDownloadUrl)) {
                     String path = downloadEcar(id, downloadUrl);
                     destDownloadUrl = uploadEcar(id, destStorageType, path);
-                    system.out.println("---------------------start--------------------------");
-                    system.out.println(destDownloadUrl);
+                    System.out.println("---------------------start--------------------------");
+                    System.out.println(destDownloadUrl);
 
-                    system.out.println("------------------------end-----------------------");
+                    System.out.println("------------------------end-----------------------");
 
                 } else {
                     TelemetryManager.info("downloadUrl available in destination: " + destDownloadUrl);
