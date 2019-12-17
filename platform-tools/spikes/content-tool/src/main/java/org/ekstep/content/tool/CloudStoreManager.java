@@ -28,6 +28,7 @@ public class CloudStoreManager {
     private String cloudDestBaseURL = Platform.config.getString("cloud.dest.baseurl");
 
 
+
     protected static Map<String, String> extractMimeType = new HashMap<>();
 
     static {
@@ -56,12 +57,22 @@ public class CloudStoreManager {
         String id = (String) metadata.get("identifier");
         String mimeType = (String) metadata.get("mimeType");
         try {
+            system.out.println("---------------------start--------------------------");
+                    system.out.println(destDownloadUrl);
+
+                    system.out.println("------------------------end-----------------------");
+
             String downloadUrl = (String) metadata.get("downloadUrl");
             if(StringUtils.isNotBlank(downloadUrl)){
                 String destDownloadUrl = getDestUrl(downloadUrl);
                 if (!urlAvailable(destDownloadUrl)) {
                     String path = downloadEcar(id, downloadUrl);
                     destDownloadUrl = uploadEcar(id, destStorageType, path);
+                    system.out.println("---------------------start--------------------------");
+                    system.out.println(destDownloadUrl);
+
+                    system.out.println("------------------------end-----------------------");
+
                 } else {
                     TelemetryManager.info("downloadUrl available in destination: " + destDownloadUrl);
                 }
