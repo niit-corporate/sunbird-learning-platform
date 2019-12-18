@@ -58,7 +58,7 @@ public class CloudStoreManager {
         String mimeType = (String) metadata.get("mimeType");
         try {
             System.out.println("---------------------start--------------------------");
-                    System.out.println(destDownloadUrl);
+                    System.out.println(cloudDestBaseURL);
 
                     System.out.println("------------------------end-----------------------");
 
