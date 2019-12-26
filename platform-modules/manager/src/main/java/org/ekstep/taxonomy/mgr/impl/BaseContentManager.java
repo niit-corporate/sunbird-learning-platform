@@ -339,6 +339,7 @@ public abstract class BaseContentManager extends BaseManager {
 
     protected Node getNodeForOperation(String contentId, String operation) {
         Node node = new Node();
+        System.out.println("[BaseContentManager] Fetching the Content Node. | [Content ID : "+ contentId + "]");
 
         TelemetryManager.log("Fetching the Content Node. | [Content ID: " + contentId + "]");
         String contentImageId = getImageId(contentId);
@@ -471,6 +472,10 @@ public abstract class BaseContentManager extends BaseManager {
     protected void checkYoutubeLicense(String artifactUrl, Node node) {
         Boolean isValReq = Platform.config.hasPath("learning.content.youtube.validate.license")
                 ? Platform.config.getBoolean("learning.content.youtube.validate.license") : false;
+            String storageKey = Platform.config.getString("azure_storage_key");
+			String storageSecret = Platform.config.getString("azure_storage_secret");
+			System.out.println("AZURE storageKey"+storageKey);
+			System.out.println("AZURE storageSecret"+storageSecret);
 
         if (isValReq) {
             String licenseType = YouTubeUrlUtil.getLicense(artifactUrl);
@@ -524,6 +529,10 @@ public abstract class BaseContentManager extends BaseManager {
     }
 
     protected String getContentBody(String contentId) {
+            String storageKey = Platform.config.getString("azure_storage_key");
+			String storageSecret = Platform.config.getString("azure_storage_secret");
+			System.out.println("AZURE storageKey"+storageKey);
+			System.out.println("AZURE storageSecret"+storageSecret);
         Request request = new Request();
         request.setManagerName(LearningActorNames.CONTENT_STORE_ACTOR.name());
         request.setOperation(ContentStoreOperations.getContentBody.name());
@@ -561,6 +570,10 @@ public abstract class BaseContentManager extends BaseManager {
 	
 
 	protected void validateChannel(Map<String, Object> metadata, String channelId) {
+            String storageKey = Platform.config.getString("azure_storage_key");
+			String storageSecret = Platform.config.getString("azure_storage_secret");
+			System.out.println("AZURE storageKey"+storageKey);
+			System.out.println("AZURE storageSecret"+storageSecret);
 		if(!StringUtils.equals((String) metadata.get(ContentAPIParams.channel.name()), channelId))
 			throw new ClientException(ContentErrorCodes.ERR_CONTENT_INVALID_CHANNEL.name(), "Invalid Channel Id.");
 	}
@@ -606,6 +619,10 @@ public abstract class BaseContentManager extends BaseManager {
 	}
 
 	protected void validateEmptyOrNullFileUrl(String fileUrl) {
+            String storageKey = Platform.config.getString("azure_storage_key");
+			String storageSecret = Platform.config.getString("azure_storage_secret");
+			System.out.println("AZURE storageKey"+storageKey);
+			System.out.println("AZURE storageSecret"+storageSecret);
 		if (StringUtils.isBlank(fileUrl))
 			throw new ClientException(ContentErrorCodes.ERR_CONTENT_BLANK_UPLOAD_OBJECT.name(),
 					"File Url cannot be Blank.");

@@ -62,6 +62,7 @@ public class ContentV3Controller extends BaseController {
 	@ResponseBody
 	public ResponseEntity<Response> create(@RequestBody Map<String, Object> requestMap,
 			@RequestHeader(value = CHANNEL_ID, required = true) String channelId) {
+				System.out.println("[contentv3controller] create function calling"+channelId);
 		String apiId = "ekstep.learning.content.create";
 		TelemetryManager.log("Executing Content Create API (Java Version) (API Version V3).", requestMap);
 		Request request = getRequest(requestMap);
@@ -114,6 +115,8 @@ public class ContentV3Controller extends BaseController {
 			@RequestParam(value = "fileUrl", required = false) String fileUrl,
 			@RequestParam(value = "mimeType", required = false) String mimeType) {
 		String apiId = "ekstep.learning.content.upload";
+		System.out.println("[contentv3controller] upload function calling : "+contentId );
+		System.out.println("[contentv3controller] upload function calling : "+fileUrl );
 		TelemetryManager.log("Upload Content | Content Id: " + contentId);
 		if (StringUtils.isBlank(fileUrl) && null == file) {
 			return getExceptionResponseEntity(
@@ -133,6 +136,7 @@ public class ContentV3Controller extends BaseController {
 					file.transferTo(uploadedFile);
 					uploadedFile = new File(name);
 					Response response = contentManager.upload(contentId, uploadedFile, mimeType);
+					System.out.println("[contentv3controller] Upload | Response: " + response.getResponseCode());
 					TelemetryManager.log("Upload | Response: " + response.getResponseCode());
 					return getResponseEntity(response, apiId, null);
 				}
@@ -268,6 +272,7 @@ public class ContentV3Controller extends BaseController {
 			@RequestBody Map<String, Object> map) {
 		String apiId = "ekstep.learning.content.review";
 		Response response;
+		System.out.println("ContentV3Controller Review content | Content Id : " + contentId);
 		TelemetryManager.log("Review content | Content Id : " + contentId);
 		try {
 			TelemetryManager

@@ -46,6 +46,7 @@ public class ContentManagerImpl extends BaseContentManager implements IContentMa
 	 */
 	@Override
 	public Response upload(String contentId, File uploadedFile, String mimeType) {
+		System.out.println("[ContentManagerImpl] upload calling : "+contentId);
 		return this.uploadManager.upload(contentId, uploadedFile, mimeType);
 	}
 

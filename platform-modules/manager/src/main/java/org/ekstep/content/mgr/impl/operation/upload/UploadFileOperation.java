@@ -19,12 +19,14 @@ public class UploadFileOperation extends BaseUploadOperation {
         boolean updateMimeType = false;
 
         try {
+            System.out.println("[UploadFileOperation] upload calling : "+contentId);
             validateEmptyOrNullContentId(contentId);
 
             if (null == uploadedFile)
                 throw new ClientException(ContentErrorCodes.ERR_CONTENT_BLANK_UPLOAD_OBJECT.name(),
                         "Upload file is blank.");
             TelemetryManager.log("Uploaded File: " + uploadedFile.getAbsolutePath());
+            System.out.println("[UploadFileOperation] Uploaded File : "+uploadedFile.getAbsolutePath());
 
             isImageContentId(contentId);
 

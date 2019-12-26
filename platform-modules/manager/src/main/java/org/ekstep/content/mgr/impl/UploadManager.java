@@ -12,10 +12,12 @@ public class UploadManager {
     private final UploadUrlOperation uploadUrlOperation = new UploadUrlOperation();
 
     public Response upload(String contentId, File uploadedFile, String mimeType) {
+        System.out.println("[UploadManager] upload calling : "+contentId);
         return this.uploadFileOperation.upload(contentId, uploadedFile, mimeType);
     }
 
     public Response upload(String contentId, String fileUrl, String mimeType) {
+        System.out.println("[UploadManager] upload calling : "+contentId);
         return this.uploadUrlOperation.upload(contentId, fileUrl, mimeType);
     }
 
