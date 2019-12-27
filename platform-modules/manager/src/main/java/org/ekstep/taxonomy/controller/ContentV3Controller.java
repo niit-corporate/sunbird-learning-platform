@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * The Class ContentV3Controller, is the main entry point for the High Level
  * Content Operations, mostly it holds the API Method related to Content
- * Workflow Management such as 'Upload', 'Publish' 'Optimize', 'Extract' and
+ * Workflow Management such as F'Upload', 'Publish' 'Optimize', 'Extract' and
  * 'Bundle'. Other that these operation the Content can have other basic CRUD
  * Operations.
  * 

@@ -340,7 +340,14 @@ public abstract class BaseContentManager extends BaseManager {
     protected Node getNodeForOperation(String contentId, String operation) {
         Node node = new Node();
         System.out.println("[BaseContentManager] Fetching the Content Node. | [Content ID : "+ contentId + "]");
-
+        String storageKey = Platform.config.getString("azure_storage_key");
+		String storageSecret = Platform.config.getString("azure_storage_secret");
+        String cloud_storage_type = Platform.config.getString("cloud_storage_type");
+		String aws_storage_secret = Platform.config.getString("aws_storage_secret");
+        String aws_storage_key = Platform.config.getString("aws_storage_key");
+		String aws_storage_container = Platform.config.getString("aws_storage_container");
+        System.out.println("[BaseContentManager] AZURE storageKey : "+storageKey);
+		System.out.println("[BaseContentManager] AZURE storageSecret : "+storageSecret);
         TelemetryManager.log("Fetching the Content Node. | [Content ID: " + contentId + "]");
         String contentImageId = getImageId(contentId);
         Response response = getDataNode(TAXONOMY_ID, contentImageId);
