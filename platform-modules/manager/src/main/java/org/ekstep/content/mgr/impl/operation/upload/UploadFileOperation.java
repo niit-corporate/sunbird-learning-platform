@@ -29,10 +29,11 @@ public class UploadFileOperation extends BaseUploadOperation {
             System.out.println("[UploadFileOperation] Uploaded File : "+uploadedFile.getAbsolutePath());
 
             isImageContentId(contentId);
-
+            System.out.println("[UploadFileOperation] UploadFileOperation calling linenumber 32 : ");
             Node node = getNodeForOperation(contentId, "upload");
-
+            System.out.println("[UploadFileOperation] UploadFileOperation calling  : ");
             isNodeUnderProcessing(node, "Upload");
+            System.out.println("[UploadFileOperation] UploadFileOperation calling linenumber 36 : ");
             if (StringUtils.isBlank(mimeType)) {
                 mimeType = getMimeType(node);
             } else {
