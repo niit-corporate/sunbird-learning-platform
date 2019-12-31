@@ -224,7 +224,7 @@ public class CloudStoreManager {
         String folder = "ecar_files/" + id;
         File file = new File(path);
         String objectKey = folder + "/" + file.getName();
-System.out.println("[CloudStoreManager] Upload Ecar obejectkey : "+objectKey;
+System.out.println("[CloudStoreManager] Upload Ecar obejectkey : "+objectKey);
 System.out.println("[CloudStoreManager] Upload Ecar option1 : "+Option.apply(1));
 System.out.println("[CloudStoreManager] Upload Ecar option5 : "+Option.apply(5));
 
