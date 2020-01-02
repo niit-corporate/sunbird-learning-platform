@@ -124,6 +124,9 @@ public class PublishFinalizer extends BaseFinalizer {
 	 *            Processor is being processed currently.
 	 */
 	public PublishFinalizer(String basePath, String contentId) {
+		System.out.println("[PublishFinalizer] PublishFinalizer calling"+ basePath);
+		System.out.println("[PublishFinalizer] PublishFinalizer calling"+ contentId);
+
 		if (!isValidBasePath(basePath))
 			throw new ClientException(ContentErrorCodeConstants.INVALID_PARAMETER.name(),
 					ContentErrorMessageConstants.INVALID_CWP_CONST_PARAM + " | [Path does not Exist.]");
@@ -150,6 +153,7 @@ public class PublishFinalizer extends BaseFinalizer {
 	 * @return the response
 	 */
 	public Response finalize(Map<String, Object> parameterMap) {
+		System.out.println("[PublishFinalizer] finalize calling");
 		
 		String artifactUrl = null;
 		File packageFile=null;
@@ -172,19 +176,25 @@ public class PublishFinalizer extends BaseFinalizer {
 		
 		boolean isCompressionApplied = (boolean) parameterMap.get(ContentWorkflowPipelineParams.isCompressionApplied.name());
 		TelemetryManager.log("Compression Applied ? " + isCompressionApplied);
+				System.out.println("[PublishFinalizer] finalize compressionapplied : " + isCompressionApplied);
+
 		
 		if (BooleanUtils.isTrue(isCompressionApplied)) {
 			Plugin ecrf = (Plugin) parameterMap.get(ContentWorkflowPipelineParams.ecrf.name());
-			
+							System.out.println("[PublishFinalizer] finalize ecrf : " + ecrf);
+
 			if (null == ecrf)
 				throw new ClientException(ContentErrorCodeConstants.INVALID_PARAMETER.name(),
 						ContentErrorMessageConstants.INVALID_CWP_FINALIZE_PARAM + " | [Invalid or null ECRF Object.]");
 			
 			// Output only ECML format
 			String ecmlType = ContentWorkflowPipelineParams.ecml.name();
+			System.out.println("[PublishFinalizer] finalize ecmltype : " + ecmlType);
 			
 			// Get Content String
 			String ecml = getECMLString(ecrf, ecmlType);
+			System.out.println("[PublishFinalizer] finalize ecml : " + ecml);
+			
 			// Write ECML File
 			writeECMLFile(basePath, ecml, ecmlType);
 
@@ -196,17 +206,22 @@ public class PublishFinalizer extends BaseFinalizer {
 					+ ContentConfigurationConstants.FILENAME_EXTENSION_SEPERATOR
 					+ ContentConfigurationConstants.DEFAULT_ZIP_EXTENSION;
 			TelemetryManager.info("Zip file name: " + zipFileName);
+			System.out.println("[PublishFinalizer] finalize zipFileName : " + zipFileName);
 			createZipPackage(basePath, zipFileName);
 			// Upload Package
 			packageFile = new File(zipFileName);
+						
 			if (packageFile.exists()) {
 				// Upload to S3
 				String folderName = S3PropertyReader.getProperty(ARTEFACT_FOLDER);
+				System.out.println("[PublishFinalizer] finalize folderName : " + folderName);
 				String[] urlArray = uploadToAWS(packageFile, getUploadFolderName(contentId, folderName));
 				if (null != urlArray && urlArray.length >= 2)
 					artifactUrl = urlArray[IDX_S3_URL];
 
+
 				// Set artifact file For Node
+				System.out.println("[PublishFinalizer] finalize artifactUrl : " + artifactUrl);
 				node.getMetadata().put(ContentWorkflowPipelineParams.artifactUrl.name(), artifactUrl);
 			}
 		}
@@ -249,6 +264,7 @@ public class PublishFinalizer extends BaseFinalizer {
 
 		Map<String,Object> collectionHierarchy = getHierarchy(node.getIdentifier(), true);
 		TelemetryManager.log("Hierarchy for content : " + node.getIdentifier() + " : " + collectionHierarchy);
+		System.out.println("[PublishFinalizer] Hierarchy for content : " + node.getIdentifier() + " : " + collectionHierarchy);
 		List<Map<String, Object>> children = null;
 		if(MapUtils.isNotEmpty(collectionHierarchy)) {
 			Set<String> collectionResourceChildNodes = new HashSet<>();
@@ -263,7 +279,10 @@ public class PublishFinalizer extends BaseFinalizer {
 
 		if (StringUtils.equalsIgnoreCase(((String) node.getMetadata().get(ContentWorkflowPipelineParams.mimeType.name())),COLLECTION_MIMETYPE)) {
 			TelemetryManager.log("Collection processing started for content: " + node.getIdentifier());
+		System.out.println("[PublishFinalizer] Collection processing started for content: " + node.getIdentifier());
+			
 			processCollection(node, children);
+					System.out.println("[PublishFinalizer] Collection processing done for content: " + node.getIdentifier());
 			TelemetryManager.log("Collection processing done for content: " + node.getIdentifier());
 		}
 		TelemetryManager.log("Ecar processing started for content: " + node.getIdentifier());
@@ -298,6 +317,7 @@ public class PublishFinalizer extends BaseFinalizer {
 		newNode.setOutRelations(node.getOutRelations());
 
 		TelemetryManager.log("Migrating the Image Data to the Live Object. | [Content Id: " + contentId + ".]");
+		System.out.println("[PublishFinalizer] Collection processing done for content: " + node.getIdentifier());
 		Response response = migrateContentImageObjectData(contentId, newNode);
 
 		// delete image..
@@ -839,6 +859,7 @@ public class PublishFinalizer extends BaseFinalizer {
     }
 	
 	private void processForEcar(Node node, List<Map<String, Object>> children) {
+		
 		List<Node> nodes = new ArrayList<Node>();
 		String downloadUrl = null;
 		String s3Key = null;

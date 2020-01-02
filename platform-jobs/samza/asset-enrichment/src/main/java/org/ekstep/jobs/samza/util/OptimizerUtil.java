@@ -170,8 +170,12 @@ public class OptimizerUtil {
 	public static String[] uploadToAWS(File uploadedFile, String identifier) {
 		String[] urlArray = new String[] {};
 		try {
+			System.out.println("[OptimizerUtil]  uploadToAWS : " + uploadedFile);
+				System.out.println("[OptimizerUtil]  uploadToAWS : " + identifier);
 			String folder = S3PropertyReader.getProperty(CONTENT_FOLDER);
 			folder = folder + "/" + Slug.makeSlug(identifier, true) + "/" + S3PropertyReader.getProperty(ARTEFACT_FOLDER);
+			System.out.println("[OptimizerUtil]  uploadToAWS : " + folder);
+			
 			urlArray = CloudStore.uploadFile(folder, uploadedFile, true);
 		} catch (Exception e) {
 			throw new ServerException(ContentErrorCodes.ERR_CONTENT_UPLOAD_FILE.name(), "Error wihile uploading the File.", e);

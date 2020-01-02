@@ -57,12 +57,21 @@ private static String cloudStoreType = Platform.config.getString("cloud_storage_
 	}
 	
 	public static String[] uploadFile(String folderName, File file, boolean slugFile) throws Exception {
+				System.out.println("[CloudStore]  uploadFile calling : " + folderName);
+		
 		if (BooleanUtils.isTrue(slugFile))
 			file = Slug.createSlugFile(file);
 		String objectKey = folderName + "/" + file.getName();
-		String container = getContainerName();
+		System.out.println("[CloudStore]  objectKey calling : " + objectKey);
+		
+	String container = getContainerName();
+		System.out.println("[CloudStore]  uploadFile container : " + container);
 		String url = storageService.upload(container, file.getAbsolutePath(), objectKey, Option.apply(false), Option
 				.apply(1), Option.apply(5), Option.empty());
+				System.out.println("[CloudStore]  uploadFile url : " + url);
+				System.out.println("[CloudStore]  uploadFile file.getAbsolutePath() : " + urfile.getAbsolutePath()l);
+				System.out.println("[CloudStore]  uploadFile Option.apply(1) : " + Option.apply(1));
+				System.out.println("[CloudStore]  uploadFile Option.apply(5) : " + Option.apply(5));
 		return new String[] { objectKey, url};
 	}
 

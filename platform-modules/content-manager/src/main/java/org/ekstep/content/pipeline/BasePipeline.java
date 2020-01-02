@@ -241,6 +241,9 @@ public class BasePipeline extends BaseManager {
 	protected String[] uploadToAWS(File uploadFile, String folder) {
 		String[] urlArray = new String[] {};
 		try {
+				System.out.println("[BasePipeline]  uploadToAWS : " + uploadFile);
+				System.out.println("[BasePipeline]  uploadToAWS : " + folder);
+			
 			if (StringUtils.isBlank(folder))
 				folder = DEF_AWS_FOLDER_NAME;
 			//urlArray = AWSUploader.uploadFile(folder, uploadFile);
