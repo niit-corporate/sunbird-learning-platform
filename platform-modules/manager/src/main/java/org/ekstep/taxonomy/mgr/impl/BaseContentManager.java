@@ -345,10 +345,17 @@ public abstract class BaseContentManager extends BaseManager {
 		String storageSecret = Platform.config.getString("azure_storage_secret");
         String cloud_storage_type = Platform.config.getString("cloud_storage_type");
 		String aws_storage_secret = Platform.config.getString("aws_storage_secret");
+		String destinationstorage_type = Platform.config.getString("destination.storage_type");
+		String contenttooldestinationstorage_type = Platform.config.getString("contenttool.destination.storage_type");
+        System.out.println("[BaseContentManager] getNodeForOperation destinationstorage_type : "+ destinationstorage_type);
+        System.out.println("[BaseContentManager] contenttooldestinationstorage_type : "+contenttooldestinationstorage_type);
+
         String aws_storage_key = Platform.config.getString("aws_storage_key");
 		String aws_storage_container = Platform.config.getString("aws_storage_container");
         System.out.println("[BaseContentManager] getNodeForOperation calling linenumber 350 : ");
         System.out.println("[BaseContentManager] AZURE storageKey : "+storageKey);
+
+       
 		System.out.println("[BaseContentManager] AZURE storageSecret : "+storageSecret);
         TelemetryManager.log("Fetching the Content Node. | [Content ID: " + contentId + "]");
         String contentImageId = getImageId(contentId);
