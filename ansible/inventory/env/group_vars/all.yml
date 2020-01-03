@@ -68,9 +68,9 @@ dial_service_authorization: "{{ lp_vault_dial_service_authorization }}"
 youtube_api_key: "{{ lp_vault_youtube_api_key }}"
 
 #aws details for kp
-aws_storage_key: {{aws_storage_key}}
-aws_storage_secret: {{aws_storage_secret}}
-aws_storage_container: {{aws_storage_container}}
+aws_storage_key: "{{aws_storage_key}}"
+aws_storage_secret: "{{aws_storage_secret}}"
+aws_storage_container: "{{aws_storage_container}}"
 
 #### backup storage secret
 backup_azure_storage_account_name: "{{azure_account_name}}"
