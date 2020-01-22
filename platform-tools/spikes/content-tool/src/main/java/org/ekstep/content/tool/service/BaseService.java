@@ -23,7 +23,7 @@ import java.util.Map;
 public class BaseService extends PlatformAPIManager {
 
     protected String destStorageType = Platform.config.getString("destination.storage_type");
-
+    
     protected CloudStoreManager cloudStoreManager = new CloudStoreManager();
 
     public Map<String, Object> readECMLFile(String filePath) {
@@ -58,6 +58,7 @@ public class BaseService extends PlatformAPIManager {
 
     protected Response uploadAsset(String path, String id, String src) throws Exception {
         File file = new File(path);
+        System.out.println("[BaseService] uploadAsset    : "+destStorageType);
         String objectKey = src.replaceAll("assets/public/", "");
         String url = cloudStoreManager.getcloudService(destStorageType).upload(cloudStoreManager.getContainerName(destStorageType), file.getAbsolutePath(), objectKey, Option.apply(false), Option.apply(1), Option.apply(5), Option.empty());
         String uploadUrl = url.split("\\?")[0];

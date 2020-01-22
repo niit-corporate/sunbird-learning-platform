@@ -54,6 +54,7 @@ public class BundleFinalizer extends BaseFinalizer {
 	 *            the content id is the identifier of content for which the Processor is being processed currently.
 	 */
 	public BundleFinalizer(String basePath, String contentId) {
+		System.out.println("[BundleFinalizer] BundleFinalizer calling   : ");
 		if (!isValidBasePath(basePath))
 			throw new ClientException(ContentErrorCodeConstants.INVALID_PARAMETER.name(),
 					ContentErrorMessageConstants.INVALID_CWP_CONST_PARAM + " | [Path does not Exist.]");
@@ -94,6 +95,7 @@ public class BundleFinalizer extends BaseFinalizer {
 	 */	
 	@SuppressWarnings("unchecked")
 	public Response finalize(Map<String, Object> parameterMap) {
+		System.out.println("[BundleFinalizer] finalize calling   : ");
 		Response response = new Response();
 		Map<String, Object> bundleMap = (Map<String, Object>) parameterMap
 				.get(ContentWorkflowPipelineParams.bundleMap.name());

@@ -30,16 +30,19 @@ import scala.concurrent.Future;
 
 public class PublishManager extends BaseManager {
 
+
 	private static final String tempFileLocation = "/data/contentBundle";
 
 	private ExecutorService executor = Executors.newFixedThreadPool(4); // Parallel execution of 4 publish processes
 
 	public Response publish(String contentId, Node node) {
+		System.out.println("[PublishManager] publish calling   : ");
 
 		String mimeType = getMimeType(node);
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		parameterMap.put(ContentAPIParams.node.name(), node);
 		if (isECMLContent(mimeType)) {
+			System.out.println("[PublishManager] isECMLContent success   : ");
 			parameterMap.put(ContentAPIParams.ecmlType.name(), isECMLContent(mimeType));
 			node.getMetadata().put(ContentAPIParams.body.name(), PublishManager.getContentBody(node.getIdentifier()));
 		}
@@ -48,12 +51,15 @@ public class PublishManager extends BaseManager {
 		// Review the content
 		Response response = review(contentId, parameterMap);
 		if (!checkError(response)) {
+			System.out.println("[PublishManager] checkError success   : ");
 			if (null == response)
 				response = new Response();
 			response.put(ContentAPIParams.publishStatus.name(), "Publish Operation for Content Id '" + contentId
 					+ "' Started Successfully!");
 			if (Platform.config.hasPath("content.publish_task.enabled")) {
+				System.out.println("[PublishManager] hasPath success   : ");
 				if (Platform.config.getBoolean("content.publish_task.enabled")) {
+					System.out.println("[PublishManager] getBoolean success   : ");
 					TelemetryManager.info("Publish task execution starting for content Id: " + contentId);
 					executor.submit(new PublishTask(contentId, parameterMap));
 				}
@@ -76,11 +82,14 @@ public class PublishManager extends BaseManager {
 	}
 
 	public Response review(String contentId, Map<String, Object> parameterMap) {
+		System.out.println("[PublishManager] review calling   : ");
 
 		Response response = new Response();
 		InitializePipeline pipeline = new InitializePipeline(getBasePath(contentId, null), contentId);
 		parameterMap.put(ContentAPIParams.isPublishOperation.name(), true);
+		System.out.println("[PublishManager] review parametermap   : ");
 		response = pipeline.init(ContentAPIParams.review.name(), parameterMap);
+		System.out.println("[PublishManager] pipeline initialize    : " + response);
 		return response;
 	}
 
@@ -98,11 +107,14 @@ public class PublishManager extends BaseManager {
 	}
 
 	public static String getContentBody(String contentId) {
+		System.out.println("[PublishManager] getContentBody calling   : ");
 		Request request = new Request();
 		request.setManagerName(LearningActorNames.CONTENT_STORE_ACTOR.name());
 		request.setOperation(ContentStoreOperations.getContentBody.name());
 		request.put(ContentStoreParams.content_id.name(), contentId);
 		Response response = makeLearningRequest(request);
+		System.out.println("[PublishManager] make learning calling   : "+ response);
+		
 		return (String) response.get(ContentStoreParams.body.name());
 	}
 

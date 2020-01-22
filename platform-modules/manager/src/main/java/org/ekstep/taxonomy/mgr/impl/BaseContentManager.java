@@ -354,6 +354,8 @@ public abstract class BaseContentManager extends BaseManager {
 		String aws_storage_container = Platform.config.getString("aws_storage_container");
         System.out.println("[BaseContentManager] getNodeForOperation calling linenumber 350 : ");
         System.out.println("[BaseContentManager] AZURE storageKey : "+storageKey);
+        String destinationstoragetype = Platform.config.getString("destination.storage_type");
+        System.out.println("[BaseContentManager] destinationstoragetype: "+destinationstoragetype);
 
        
 		System.out.println("[BaseContentManager] AZURE storageSecret : "+storageSecret);
@@ -490,6 +492,8 @@ public abstract class BaseContentManager extends BaseManager {
                 ? Platform.config.getBoolean("learning.content.youtube.validate.license") : false;
             String storageKey = Platform.config.getString("azure_storage_key");
 			String storageSecret = Platform.config.getString("azure_storage_secret");
+			String destinationstoragetype = Platform.config.getString("destination.storage_type");
+            System.out.println("destinationstoragetype"+destinationstoragetype);
 			System.out.println("AZURE storageKey"+storageKey);
 			System.out.println("AZURE storageSecret"+storageSecret);
 

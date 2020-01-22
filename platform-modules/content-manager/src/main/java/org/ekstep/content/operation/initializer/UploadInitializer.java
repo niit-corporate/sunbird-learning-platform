@@ -57,6 +57,7 @@ public class UploadInitializer extends BaseInitializer {
 	 *            the content id is the identifier of content for which the Processor is being processed currently.
 	 */
 	public UploadInitializer(String basePath, String contentId) {
+		System.out.println("[UploadInitializer] UploadInitializer calling   : ");
 		if (!isValidBasePath(basePath))
 			throw new ClientException(ContentErrorCodeConstants.INVALID_PARAMETER.name(),
 					ContentErrorMessageConstants.INVALID_CWP_CONST_PARAM + " | [Path does not Exist.]");
@@ -65,6 +66,9 @@ public class UploadInitializer extends BaseInitializer {
 					ContentErrorMessageConstants.INVALID_CWP_CONST_PARAM + " | [Invalid Content Id.]");
 		this.basePath = basePath;
 		this.contentId = contentId;
+				System.out.println("[UploadInitializer] UploadInitializer basepath   : "+basePath);
+				System.out.println("[UploadInitializer] UploadInitializer contentId   : "+contentId);
+
 	}
 	
 	/**
@@ -83,9 +87,13 @@ public class UploadInitializer extends BaseInitializer {
 	 * @return the response
 	 */
 	public Response initialize(Map<String, Object> parameterMap) {
+		System.out.println("[UploadInitializer] initialize calling   : ");
+
 		Response response = new Response();
 		File file = (File) parameterMap.get(ContentWorkflowPipelineParams.file.name());
 		Node node = (Node) parameterMap.get(ContentWorkflowPipelineParams.node.name());
+		System.out.println("[UploadInitializer] initialize file   : "+file);
+		System.out.println("[UploadInitializer] initialize node   : "+node);
 		if (null == file || !file.exists())
 			throw new ClientException(ContentErrorCodeConstants.INVALID_PARAMETER.name(),
 					ContentErrorMessageConstants.INVALID_CWP_INIT_PARAM + " | [File does not Exist.]");
@@ -95,17 +103,21 @@ public class UploadInitializer extends BaseInitializer {
 		ContentValidator validator = new ContentValidator();
 		if (validator.isValidContentPackage(file)) {
 			//  Extract the ZIP File 
+			System.out.println("[UploadInitializer] Extract the ZIP File    : ");
 			extractContentPackage(file);
 
 			//  Get ECRF Object 
 			Plugin ecrf = getECRFObject();
+			System.out.println("[UploadInitializer] Get ECRF Object    : "+ecrf);
 
 			// Get Pipeline Object 
 			AbstractProcessor pipeline = PipelineRequestorClient
 					.getPipeline(ContentWorkflowPipelineParams.extract.name(), basePath, contentId);
 
 			//  Start Pipeline Operation 
+			System.out.println("[UploadInitializer] Start Pipeline Operation     : ");
 			ecrf = pipeline.execute(ecrf);
+			System.out.println("[UploadInitializer] Call Finalyzer      : "+ecrf);
 
 			//  Call Finalyzer 
 			FinalizePipeline finalize = new FinalizePipeline(basePath, contentId);
@@ -116,6 +128,8 @@ public class UploadInitializer extends BaseInitializer {
 			finalizeParamMap.put(ContentWorkflowPipelineParams.node.name(), node);
 			response = finalize.finalyze(ContentWorkflowPipelineParams.upload.name(), finalizeParamMap);
 		}
+		System.out.println("[UploadInitializer] end initialize      : "+response);
+
 		return response;
 	}
 	
@@ -126,9 +140,12 @@ public class UploadInitializer extends BaseInitializer {
 	 *  return ECRFObject 
 	 *  */
 	private Plugin getECRFObject() {
+
 		Plugin plugin = new Plugin();
 		String ecml = getFileString();
 		String ecmlType = getECMLType();
+		System.out.println("[UploadInitializer] getECRFObject calling     : "+ecml);
+		System.out.println("[UploadInitializer] getECRFObject calling     : "+ecmlType);
 		if (StringUtils.equalsIgnoreCase(ecmlType, ContentWorkflowPipelineParams.ecml.name())) {
 			XMLContentParser parser = new XMLContentParser();
 			plugin = parser.parseContent(ecml);
@@ -136,6 +153,7 @@ public class UploadInitializer extends BaseInitializer {
 			JSONContentParser parser = new JSONContentParser();
 			plugin = parser.parseContent(ecml);
 		}
+		System.out.println("[UploadInitializer] getECRFObject end     : ");
 		return plugin;
 	}
 	
@@ -146,6 +164,7 @@ public class UploadInitializer extends BaseInitializer {
 	 * @param file the ContentPackageFile
 	 */
 	private void extractContentPackage(File file) {
+		System.out.println("[UploadInitializer] extractContentPackage calling     : ");
 		try {
 			UnzipUtility util = new UnzipUtility();
 			util.unzip(file.getAbsolutePath(), basePath);
@@ -165,6 +184,7 @@ public class UploadInitializer extends BaseInitializer {
 	 * @returns the fileString
 	 */
 	private String getFileString() {
+		System.out.println("[UploadInitializer] getFileString calling     : ");
 		String fileString = "";
 		File jsonECMLFile = new File(basePath + File.separator + JSON_ECML_FILE_NAME);
 		File xmlECMLFilePath = new File(basePath + File.separator + XML_ECML_FILE_NAME);

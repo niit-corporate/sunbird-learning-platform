@@ -59,6 +59,7 @@ public class PublishPipelineService implements ISamzaService {
 
 	@Override
 	public void initialize(Config config) throws Exception {
+		System.out.println("[PublishPipelineService] initialize calling  : ");
 		this.config = config;
 		JSONUtils.loadProperties(config);
 		LOGGER.info("Service config initialized");
@@ -87,34 +88,45 @@ public class PublishPipelineService implements ISamzaService {
 		}
 
 		String nodeId = (String) object.get(PublishPipelineParams.id.name());
+		System.out.println("[PublishPipelineService] processMessage calling  : "+nodeId);
 		if (StringUtils.isNotBlank(nodeId)) {
 			try {
 				Node node = getNode(nodeId);
 				if (null != node) {
+					System.out.println("[PublishPipelineService] processMessage insideif  : ");
 					if (prePublishValidation(node, (Map<String, Object>) edata.get("metadata"))) {
+						System.out.println("[PublishPipelineService] prepublishvalidation success  : ");
 						LOGGER.info(
 								"Node fetched for publish and content enrichment operation : " + node.getIdentifier());
 						prePublishUpdate(edata, node);
+						System.out.println("[PublishPipelineService] prePublishUpdate success  : ");
 						processJob(edata, nodeId, metrics);
+						System.out.println("[PublishPipelineService] processJob success  : ");
 					}
 				} else {
+						System.out.println("[PublishPipelineService] processMessage insideelse  : ");
 					metrics.incSkippedCounter();
 					FailedEventsUtil.pushEventForRetry(systemStream, message, metrics, collector,
 							PlatformErrorCodes.PROCESSING_ERROR.name(), new ServerException("ERR_PUBLISH_PIPELINE", "Please check neo4j connection or identfier to publish"));
 					LOGGER.debug("Invalid Node Object. Unable to process the event", message);
 				}
 			} catch (PlatformException e) {
+				System.out.println("[PublishPipelineService] catchblock   : ");
+				e.printStackTrace();
 				LOGGER.error("Failed to process message", message, e);
 				metrics.incFailedCounter();
 				FailedEventsUtil.pushEventForRetry(systemStream, message, metrics, collector,
 						PlatformErrorCodes.PROCESSING_ERROR.name(), e);
 			} catch (Exception e) {
+				System.out.println("[PublishPipelineService] second catchblock   : ");
+				e.printStackTrace();
 				LOGGER.error("Failed to process message", message, e);
 				metrics.incErrorCounter();
 				FailedEventsUtil.pushEventForRetry(systemStream, message, metrics, collector,
 						PlatformErrorCodes.SYSTEM_ERROR.name(), e);
 			}
 		} else {
+			System.out.println("[PublishPipelineService] outerelse   : ");
 			FailedEventsUtil.pushEventForRetry(systemStream, message, metrics, collector,
 					PlatformErrorCodes.SYSTEM_ERROR.name(), new ServerException("ERR_PUBLISH_PIPELINE", "Id is blank"));
 			metrics.incSkippedCounter();
@@ -123,6 +135,7 @@ public class PublishPipelineService implements ISamzaService {
 	}
 
 	private boolean prePublishValidation(Node node, Map<String, Object> eventMetadata) {
+		System.out.println("[PublishPipelineService] prePublishValidation calling   : ");
 		Map<String, Object> objMetadata = (Map<String, Object>) node.getMetadata();
 
 		double eventPkgVersion = ((eventMetadata.get("pkgVersion") == null) ? 0d
@@ -133,15 +146,17 @@ public class PublishPipelineService implements ISamzaService {
 	}
 
 	private void processJob(Map<String, Object> edata, String contentId, JobMetrics metrics) throws Exception {
-
+System.out.println("[PublishPipelineService] processJob calling   : ");
 		Node node = getNode(contentId);
 		String publishType = (String) edata.get(PublishPipelineParams.publish_type.name());
 		node.getMetadata().put(PublishPipelineParams.publish_type.name(), publishType);
 		if (publishContent(node, publishType)) {
+			System.out.println("[PublishPipelineService] publishContent success   : ");
 			metrics.incSuccessCounter();
 			edata.put(PublishPipelineParams.status.name(), PublishPipelineParams.SUCCESS.name());
 			LOGGER.debug("Node publish operation :: SUCCESS :: For NodeId :: " + node.getIdentifier());
 		} else {
+			System.out.println("[PublishPipelineService] publishContent else   : ");
 			edata.put(PublishPipelineParams.status.name(), PublishPipelineParams.FAILED.name());
 			LOGGER.debug("Node publish operation :: FAILED :: For NodeId :: " + node.getIdentifier());
 			throw new PlatformException(PlatformErrorCodes.PUBLISH_FAILED.name(),
@@ -151,6 +166,7 @@ public class PublishPipelineService implements ISamzaService {
 
 	@SuppressWarnings("unchecked")
 	private void prePublishUpdate(Map<String, Object> edata, Node node) {
+		System.out.println("[PublishPipelineService] prePublishUpdate calling   : ");
 		Map<String, Object> metadata = (Map<String, Object>) edata.get("metadata");
 		node.getMetadata().putAll(metadata);
 
@@ -164,16 +180,19 @@ public class PublishPipelineService implements ISamzaService {
 	}
 
 	private Node getNode(String nodeId) {
+		System.out.println("[PublishPipelineService] getNode calling   : ");
 		Node node = null;
 		String imgNodeId = nodeId + DEFAULT_CONTENT_IMAGE_OBJECT_SUFFIX;
 		node = util.getNode(PublishPipelineParams.domain.name(), imgNodeId);
 		if (null == node) {
 			node = util.getNode(PublishPipelineParams.domain.name(), nodeId);
 		}
+		System.out.println("[PublishPipelineService] getNode node   : "+node);
 		return node;
 	}
 
 	private boolean publishContent(Node node, String publishType) throws Exception {
+		System.out.println("[PublishPipelineService] publishContent calling   : ");
 		boolean published = true;
 		LOGGER.debug("Publish processing start for content: " + node.getIdentifier());
 		publishNode(node, (String) node.getMetadata().get(PublishPipelineParams.mimeType.name()));
@@ -202,6 +221,7 @@ public class PublishPipelineService implements ISamzaService {
 	}
 
 	private void publishNode(Node node, String mimeType) {
+		System.out.println("[PublishPipelineService] publishNode calling   : ");
 		if (null == node)
 			throw new ClientException(ContentErrorCodeConstants.INVALID_CONTENT.name(),
 					ContentErrorMessageConstants.INVALID_CONTENT
@@ -239,13 +259,16 @@ public class PublishPipelineService implements ISamzaService {
 	}
 
 	private void setContentBody(Node node, String mimeType) {
+		System.out.println("[PublishPipelineService] setContentBody calling   : ");
 		if (PublishManager.isECMLContent(mimeType)) {
+		System.out.println("[PublishPipelineService] PublishManagerECMLContent success   : ");	
 			node.getMetadata().put(PublishPipelineParams.body.name(),
 					PublishManager.getContentBody(node.getIdentifier()));
 		}
 	}
 
 	private boolean validateObject(Map<String, Object> edata) {
+		System.out.println("[PublishPipelineService] validateObject calling   : ");
         String action = (String) edata.get("action");
         String contentType = (String) edata.get(PublishPipelineParams.contentType.name());
         Integer iteration = (Integer) edata.get(PublishPipelineParams.iteration.name());

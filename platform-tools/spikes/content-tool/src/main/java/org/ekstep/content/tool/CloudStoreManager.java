@@ -57,10 +57,10 @@ public class CloudStoreManager {
         String id = (String) metadata.get("identifier");
         String mimeType = (String) metadata.get("mimeType");
         try {
-            System.out.println("---------------------start--------------------------");
-                    System.out.println(cloudDestBaseURL);
+            //System.out.println("---------------------start--------------------------");
+                   // System.out.println(cloudDestBaseURL);
 
-                    System.out.println("------------------------end-----------------------");
+                   // System.out.println("------------------------end-----------------------");
 
             String downloadUrl = (String) metadata.get("downloadUrl");
             if(StringUtils.isNotBlank(downloadUrl)){
@@ -68,10 +68,10 @@ public class CloudStoreManager {
                 if (!urlAvailable(destDownloadUrl)) {
                     String path = downloadEcar(id, downloadUrl);
                     destDownloadUrl = uploadEcar(id, destStorageType, path);
-                    System.out.println("---------------------start--------------------------");
-                    System.out.println(destDownloadUrl);
+                    //System.out.println("---------------------start--------------------------");
+                    //System.out.println(destDownloadUrl);
 
-                    System.out.println("------------------------end-----------------------");
+                    //System.out.println("------------------------end-----------------------");
 
                 } else {
                     TelemetryManager.info("downloadUrl available in destination: " + destDownloadUrl);
@@ -221,6 +221,9 @@ public class CloudStoreManager {
     }
 
     public String uploadEcar(String id, String cloudStoreType, String path) {
+        System.out.println("[CloudStoreManager] Upload Ecar calling cloudStoreType : "+cloudStoreType);
+        System.out.println("[CloudStoreManager] Upload Ecar calling id : "+id);
+        System.out.println("[CloudStoreManager] Upload Ecar calling path : "+path);
         String folder = "ecar_files/" + id;
         File file = new File(path);
         String objectKey = folder + "/" + file.getName();
